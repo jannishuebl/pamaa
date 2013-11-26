@@ -1,7 +1,7 @@
 library showaccount;
 
 import 'package:web_ui/web_ui.dart';
-import 'package:js/js.dart' as js;
+import 'dart:js';
 import 'dart:html';
 import 'package:ams/controller.dart';
 
@@ -31,8 +31,8 @@ static  String pageUrl = 'showAccount';
   
   void showDecryptedPw(var pwDecrypted) {
     querySelector('#pw').innerHtml =  pwDecrypted.toString();
-    js.context.jQuery("#pw").focus().select();
-    js.context.jQuery('#showAccountButton').hide();
+    context['jQuery']("#pw").focus().select();
+    context['jQuery']('#showAccountButton').hide();
   }
   
   String getPageUrl() {
@@ -40,7 +40,7 @@ static  String pageUrl = 'showAccount';
   }
 
   void remove() {
-    var dialog = js.map({
+    var dialog = new JsObject.fromBrowserObject({
       'title'      : 'Warning..!',
       'content'    : 'Are you sure to delete the account?',
       'draggable'  : true,
@@ -48,19 +48,19 @@ static  String pageUrl = 'showAccount';
       'buttons'    : {
         'No': {},
         'Yes'    : {
-          'action': new js.Callback.once(() {
+          'action': new JsFunction.withThis(() {
             new Controller()..removeAccount(new Controller().data.account.firstWhere(
                 (e) { return e.data.id == data.id;}), new Controller().data.folder.firstWhere( (e) { return e.data.id == data.folder;}).data);
           })
         }
       }
     });
-    js.context.jQuery.Dialog(dialog);
+    context['jQuery'].Dialog(dialog);
     
   }
   
   void move() {
-    var dialog = js.map({
+    var dialog = new JsObject.fromBrowserObject({
       'title'      : 'Warning..!',
       'content'    : 'Are you sure to move the account?',
       'draggable'  : true,
@@ -68,7 +68,7 @@ static  String pageUrl = 'showAccount';
       'buttons'    : {
         'No': {},
         'Yes'    : {
-          'action': new js.Callback.once(() {
+          'action': new JsFunction.withThis(() {
             new Controller()..moveAccount(
                   new Controller().data.account.firstWhere(
                       (e) { return e.data.id == data.id;}), selectedFolder, 
@@ -78,11 +78,11 @@ static  String pageUrl = 'showAccount';
         }
       }
     });
-    js.context.jQuery.Dialog(dialog);
+    context['jQuery'].Dialog(dialog);
   }
   
   void rename() {
-    var dialog = js.map({
+    var dialog = new JsObject.fromBrowserObject({
       'title'      : 'Warning..!',
       'content'    : 'Enter your new Accountname:<br><br><div class="input-control text"><input autofocus="true" id="accountname" type="text" /><button class="btn-clear"></button></div>',
       'draggable'  : true,
@@ -90,8 +90,8 @@ static  String pageUrl = 'showAccount';
       'buttons'    : {
         'No': {},
         'Yes'    : {
-          'action': new js.Callback.once(() {
-            InputElement accountnameField = query('#accountname');
+          'action': new JsFunction.withThis(() {
+            InputElement accountnameField = querySelector('#accountname');
             String accountname = accountnameField.value;
 
             new Controller()..updateAccount(data..name=accountname);
@@ -100,6 +100,6 @@ static  String pageUrl = 'showAccount';
         }
       }
     });
-    js.context.jQuery.Dialog(dialog);
+    context['jQuery'].Dialog(dialog);
   }
 }

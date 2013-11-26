@@ -5,7 +5,7 @@ import 'dart:html';
 import 'package:web_ui/web_ui.dart';
 import 'dart:async'; 
 import 'package:crypto/crypto.dart';
-import 'package:js/js.dart' as js;
+import 'dart:js';
 
 import 'package:ams/controller.dart';
 
@@ -34,7 +34,7 @@ void sendJson(String path, String methode, var data, var succ, {bool fullPathSet
 handelFail(int status) {
   Timer.run(() {
       // trys to close the Dialog
-      bool test = js.context.jQuery.Dialog.close();
+      bool test = context["jQuery"].Dialog.close();
 
       // test if the dialog is still open
       // if closed: open dialog to get masterpw
@@ -47,7 +47,7 @@ handelFail(int status) {
       'buttonsAlign': 'right',
       'buttons'    : {
       'Ok'    : {
-      'action': new js.Callback.once(() {})
+      'action': new JsFunction.withThis((){})
       }
       }
       };
@@ -64,8 +64,8 @@ handelFail(int status) {
                    dialogData['content'] = 'Sorry, an error occurred.';
                  }
       }
-      var dialog = js.map(dialogData);  
-      js.context.jQuery.Dialog(dialog);
+      var dialog = new JsObject.fromBrowserObject(dialogData);  
+      context["jQuery"].Dialog(dialog);
       } else {
         handelFail(status);
       }
@@ -84,14 +84,15 @@ String createUrl(String path, bool fullPathSet) {
 void sendRequest(String path, String methode, var succ, {bool fullPathSet: false, var requestFailed: null}) {
   path = createUrl(path, fullPathSet);
 
-  var dialog = js.map({
+  var dialog = {
       'title'      : '',
       'content'    : '<img style="margin-top:20px;margin-left:20px"src="style/metro/images/preloader-w8-cycle-black.gif">',
       'draggable'  : false,
       'empty' : true,
       'buttons'    : {}
-      });
-  js.context.jQuery.Dialog(dialog);
+      };
+  
+ context["jQuery"].Dialog(new JsObject.fromBrowserObject(dialog));
 
   HttpRequest request = new HttpRequest();
   request.open(methode, path);
@@ -100,7 +101,7 @@ void sendRequest(String path, String methode, var succ, {bool fullPathSet: false
       if (request.readyState == HttpRequest.DONE &&
         (request.status == 200 || request.status == 0)) {
 
-      js.context.jQuery.Dialog.close();
+      context['jQuery'].Dialog.close();
       succ(request);   
 
       } else {
@@ -169,9 +170,9 @@ String readCookie(name) {
 void createCookie(name,value,days) {
   var expires; 
   if (days) {
-    var date = new Date();
-    date.setTime(date.getTime()+(days*24*60*60*1000));
-    expires = "; expires="+date.toGMTString();
+    var date = new DateTime.now();
+    date.millisecond = date.millisecond +(days*24*60*60*1000);
+    expires = "; expires="+date.toUtc().toString();
   }
   else expires = "";
   document.cookie = name+"="+value+expires+"; path=/";

@@ -1,7 +1,7 @@
 library folderComponent;
 
 import 'package:web_ui/web_ui.dart';
-import 'package:js/js.dart' as js;
+import 'dart:js';
 import 'package:ams/controller.dart';
 import 'package:ams/views/page/add-account.dart';
 
@@ -25,10 +25,10 @@ class MenuFolder extends WebComponent {
   void open() {
       querySelector('ul').id = "elToOpen";
       querySelector('i').id = "icontochange";
-      js.context.jquerySelector(new js.Callback.once((jquery) {
-        jquerySelector('#elToOpen').show('fast');
-        jquerySelector('#icontochange').removeClass('icon-folder');
-        jquerySelector('#icontochange').addClass( "icon-folder-2" );
+      context['jQuery'](new JsFunction.withThis((jquery) {
+        context['jQuery']('#elToOpen').show('fast');
+        context['jQuery']('#icontochange').removeClass('icon-folder');
+        context['jQuery']('#icontochange').addClass( "icon-folder-2" );
       }));
     querySelector('i').id = "";
     querySelector('ul').id = "";
@@ -37,9 +37,9 @@ class MenuFolder extends WebComponent {
   void toggle() {
       querySelector('ul').id = "elToOpen";
       querySelector('i').id = "icontochange";
-      js.context.jquerySelector(new js.Callback.once((jquery) {
-        jquerySelector('#elToOpen').toggle('fast');
-        jquerySelector('#icontochange').toggleClass( "icon-folder icon-folder-2" );
+      context['jQuery'](new JsFunction.withThis((jquery) {
+        context['jQuery']('#elToOpen').toggle('fast');
+        context['jQuery']('#icontochange').toggleClass( "icon-folder icon-folder-2" );
       }));
     querySelector('i').id = "";
     querySelector('ul').id = "";

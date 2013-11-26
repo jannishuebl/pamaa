@@ -4,7 +4,8 @@ import 'dart:html';
 import 'dart:convert';
 import 'dart:async'; 
 import 'package:web_ui/web_ui.dart';
-import 'package:js/js.dart' as js;
+import 'dart:js';
+
 import 'package:crypto/crypto.dart';
 import 'package:google_oauth2_client/google_oauth2_browser.dart';
 import 'package:ams/util/util.dart' as util;
@@ -85,14 +86,17 @@ class Controller {
   // wird von der Mainmethode aufgerufen und inizalisiert die Webseite
 
   void init() {
+    print("hallo");
     //    auth = new GoogleOAuth2(
     //        "382698109176.apps.googleusercontent.com", // Client ID
     //        ["openid", "email","https://www.googleapis.com/auth/userinfo.profile"],
     //        tokenLoaded:(token){oauthReady(token);});
-    js.context.OAuth.callback('google', new js.Callback.once(oauthReady));
+
+    //context['OAuth'].callMethod('callback', ['google', new JsFunction.withThis(oauthReady)]);
+    print("hallo2");
   }
   void login() {
-    js.context.OAuth.redirect('google','https://localhost:8443');
+    context['OAuth'].redirect('google','https://localhost:8443');
 
     // new js.Callback.once((error, result) {
     //     js.context.console.debug(result);
@@ -152,14 +156,14 @@ class Controller {
         showPage(pageComp.getPage());
 
         // macht jquery die textfelder bekannt damit der clearbutton funktioniert
-        js.context.jQuery()["Input"](js.map({'initAll': true}));
+        context['jQuery']["Input"](new JsObject.fromBrowserObject({'initAll': true}));
     });
   }
 
   // fügt einen Ordner in die Sidebar ein
   void addFolder(rawFolder) {
     var folderData = new FolderData(rawFolder['folderid'], rawFolder['foldername']);
-    UListElement menu = query('#menu');
+    UListElement menu = querySelector('#menu');
 
 
     var folderLi = new MenuFolder(folderData)
@@ -176,10 +180,10 @@ class Controller {
     else util.addComponent(menu, folderLi, false, data.folder.elementAt(preElementIndex));
 
     // Maks the Accounts Moveable
-    js.context.jQuery('#'+folderData.id.toString()+"Folder ul").sortable(js.map({
+    context['jQuery']('#'+folderData.id.toString()+"Folder ul").sortable(new JsObject.fromBrowserObject({
           "connectWith": ".connectedSortable",
           "cancel": ".notSortable",
-          "stop": new js.Callback.many(handleAccountMoved)
+          "stop": new JsFunction.withThis(handleAccountMoved)
           })).disableSelection();
   }
   // this methode is called wenn the user sorts an account with drag`n`drop
@@ -203,6 +207,7 @@ class Controller {
     var accountLi = new MenuAccount()
       ..host = new LIElement()
       ..data=accountData ..id=accountData.id.toString()+"Account";
+
 
     data.account.add(accountLi);
 
@@ -230,7 +235,7 @@ class Controller {
     else util.addComponent(folderUl, accountLi, false, accountsForFolder.elementAt(preElementIndex));
 
 
-    //      js.context.jQuery('#'+accountData.id.toString()+"Account").draggable();
+    //      context['jQuery']('#'+accountData.id.toString()+"Account").draggable();
 
     //});
     return accountData;

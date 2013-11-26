@@ -2,7 +2,7 @@ library page_controller;
 
 import 'dart:html';
 import 'package:web_ui/web_ui.dart';
-import 'package:js/js.dart' as js;
+import 'dart:js';
 import 'package:ams/controller.dart';
 import 'package:ams/util/util.dart' as util;
 import 'package:ams/aes/uuid.dart';
@@ -31,9 +31,9 @@ bool statePushed = false;
     // is needed because there are problem wenn the user logsout and relogin again
     new Controller().pageComp = this;
 
-    js.context.History.Adapter.bind(js.context.window,'statechange', new js.Callback.many((_){ 
+    context['History'].Adapter.bind(context['window'],'statechange', new JsObject.fromBrowserObject((_){ 
           if(!statePushed) {
-          var State = js.context.History.getState(); 
+          var State = context['History'].getState(); 
           int url = State.data.url;
          var page =  getPage(path:url);
     page..host = new DivElement();
@@ -53,13 +53,13 @@ bool statePushed = false;
     // prüfen ob keine Url angehängt ist. also ob nur sie nur mit domain/ endet.
     // wenn dem so ist wird der Status erstetzt und nicht ein neuer Hinzugefügt
     statePushed = true;
-    var State = js.context.History.getState(); 
+    var State = context['History'].getState(); 
     if(State.hash.compareTo('/') != 0) {
       //print('pushState');
-      js.context.History.pushState(js.map({"url":pathToPages + page.getPageUrl() }), titel, "https://localhost:8443/"+pathToPages + page.getPageUrl()); 
+      context['History'].pushState(new JsObject.fromBrowserObject({"url":pathToPages + page.getPageUrl() }), titel, "https://localhost:8443/"+pathToPages + page.getPageUrl()); 
     } else {
       //print('replaceState');
-      js.context.History.replaceState(js.map({"url":pathToPages + page.getPageUrl() }), titel, pathToPages + page.getPageUrl()); 
+      context['History'].replaceState(new JsObject.fromBrowserObject({"url":pathToPages + page.getPageUrl() }), titel, pathToPages + page.getPageUrl()); 
     }}
 
   void pageBack() {
@@ -68,7 +68,7 @@ bool statePushed = false;
 
   }
   void reset() {
-    js.context.History.pushState(js.map({"url":'/'}), titel, "/"); 
+    context['History'].pushState(new JsObject.fromBrowserObject({"url":'/'}), titel, "/"); 
   }
 
   WebPage getPage({var path:null}) {

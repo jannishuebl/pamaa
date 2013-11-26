@@ -4,7 +4,7 @@ import 'package:web_ui/web_ui.dart';
 import 'dart:html';
 import 'dart:convert';
 import 'dart:async';
-import 'package:js/js.dart' as js;
+import 'dart:js';
 import 'dart:math';
 
 import 'package:ams/controller.dart';
@@ -45,13 +45,13 @@ static  String pageUrl = 'addAccount';
     return new List.from(new Controller().data.folder.reversed);
   }
 
-  void togglePwMenu(e) {
+  void togglePwMenu(_) {
         //    querySelector('ul').id = "elToOpen";
         //    querySelector('i').id = "icontochange";
-        js.context.jQuery(new js.Callback.once((jquery) {
-            jQuery('#pwSettings').toggle('fast');
+        context['jQuery'](new JsFunction.withThis((jquery) {
+          context['jQuery']('#pwSettings').toggle('fast');
             }));
-    //    js.context.jQuery(new js.Callback.once((jquery) {
+    //    context['jQuery'](new JsFunction.withThis((jquery) {
     //      jQuery('#pwSettings').toggle('fast');
     //    }));
   }
@@ -66,25 +66,25 @@ static  String pageUrl = 'addAccount';
         var generatePwRow = query ('#generatePwCellWrapper').innerHtml;
 
         querySelector ('#generatePwCellWrapper').innerHtml="";
-        js.context.jQuery('#generatePwCellWrapper').html(generatePwRow);
+        context['jQuery']('#generatePwCellWrapper').html(generatePwRow);
 
         util.moveParkedElements();
 
         querySelector('#generatePw').onClick.listen(generatePw);
 
-        var options = js.map({'initAll': true});
-        js.context.jQuery()['Slider'](options);
+        var options = new JsObject.fromBrowserObject({'initAll': true});
+        context['jQuery']()['Slider'](options);
 
 
-        js.context.jQuery( "#pwSettings" ).position(js.map({
+        context['jQuery']( "#pwSettings" ).position(new JsObject.fromBrowserObject({
             "my": "left top",
             "at": "left bottom",
             "of": "#generatePwCell"
             }));
-        js.context.jQuery( "#pwSettings" ).hide();
+        context['jQuery']( "#pwSettings" ).hide();
         querySelector('#togglePwSettings').onClick.listen(togglePwMenu);
         // macht jquery die textfelder bekannt damit der clearbutton funktioniert
-        js.context.jQuery()["Input"](js.map({'initAll': true}));
+        context['jQuery']()["Input"](new JsObject.fromBrowserObject({'initAll': true}));
         // Keine Reflection bei dart2js beim ersten klicken auf den button wird diese init() aufgerufen um das context menü auch zu öffnen wird ein klick simuliert
         // kann somit raus
         //    querySelector('#togglePwSettings').click();
@@ -110,27 +110,27 @@ static  String pageUrl = 'addAccount';
 
   void saveAccount() {
     if( selectedFolder == null || accPw == null || accLogin == null || accName == null || selectedFolder.isEmpty || accName.isEmpty || accLogin.isEmpty || accPw.isEmpty) {
-      var dialog = js.map({
+      var dialog = new JsObject.fromBrowserObject({
           'title'      : 'Warning..!',
           'content'    : 'Please fillout all Datafields.',
           'draggable'  : true,
           'buttonsAlign': 'right',
           'buttons'    : {
           'Ok'    : {
-          'action': new js.Callback.once(() {})
+          'action': new JsFunction.withThis(() {})
           }
           }
           });
-      js.context.jQuery.Dialog(dialog);
+      context['jQuery'].Dialog(dialog);
 
     } else {
       Crypt cry = new Crypt();
-      var cryptPw = cry.cryptPassword(accPw, sendData);
+      cry.cryptPassword(accPw, sendData);
     }
   }
 
   void sendData(String cryptPw) {
-    AccountData account = new AccountData(-1, accName, accLogin, cryptPw, int.parse(selectedFolder));
+    AccountData account = new AccountData("-1", accName, accLogin, cryptPw, int.parse(selectedFolder));
     util.sendJson('account', 
         'POST', account.toString(), requestCompleded);
   }

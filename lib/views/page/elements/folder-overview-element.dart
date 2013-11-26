@@ -3,7 +3,7 @@ library folderOverviewElement;
 import 'package:web_ui/web_ui.dart';
 import 'dart:html';
 import 'dart:async';
-import 'package:js/js.dart' as js;
+import 'dart:js';
 import 'package:ams/util/util.dart' as util;
 import 'package:ams/controller.dart';
 import 'package:ams/views/main/menu-folder.dart';
@@ -40,7 +40,7 @@ class FolderOverviewElement extends WebComponent {
   void delete() {
     isremove = true;
     
-    var dialog = js.map({
+    var dialog = new JsObject.fromBrowserObject({
       'title'      : 'Warning..!',
       'content'    : 'Are you sure to delete the folder and its accounts?',
       'draggable'  : true,
@@ -48,14 +48,14 @@ class FolderOverviewElement extends WebComponent {
       'buttons'    : {
         'No': {},
         'Yes'    : {
-          'action': new js.Callback.once(() {
+          'action': new JsFunction.withThis(() {
             new Controller()..removeFolder(folder);
             new Controller()..showPage(new FolderOverview());
           })
         }
       }
     });
-    js.context.jQuery.Dialog(dialog);
+    context['jQuery'].Dialog(dialog);
     
     
   }

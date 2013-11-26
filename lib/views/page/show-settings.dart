@@ -1,9 +1,11 @@
 library showsettings;
 
 import 'dart:html';
-import 'package:js/js.dart' as js;
+import 'dart:js';
+
 import 'package:web_ui/web_ui.dart';
 import 'package:ams/controller.dart';
+import 'package:ams/views/main/menu-account.dart';
 import 'package:ams/util/util.dart' as util;
 
 /** Die Klasse ist das Model zu der Seite Account hinzufügen. **/
@@ -23,7 +25,7 @@ static  String pageUrl = 'settings';
 
   void init() {
     // macht jquery die textfelder bekannt damit der clearbutton funktioniert
-    js.context.jQuery()["Input"](js.map({'initAll': true}));
+    context['jQuery']()["Input"](new JsObject.fromBrowserObject({'initAll': true}));
   }
 
   savePw() {
@@ -43,45 +45,45 @@ static  String pageUrl = 'settings';
         oldMPw = '';
         newMPw = '';
         newMPw2 = '';
-        var dialog = js.map({
+        var dialog = new JsObject.fromBrowserObject({
             'title'      : 'Success..!',
             'content'    : 'Masterpassword changed.!.',
             'draggable'  : true,
             'buttonsAlign': 'right',
             'buttons'    : {
             'Ok'    : {
-            'action': new js.Callback.once(() {})
+            'action': new JsFunction.withThis(() {})
             }
             }
             });
-        js.context.jQuery.Dialog(dialog);
+        context['jQuery'].Dialog(dialog);
       } else {
-        var dialog = js.map({
+        var dialog = new JsObject.fromBrowserObject({
             'title'      : 'Error..!',
             'content'    : 'Input does not match.!.',
             'draggable'  : true,
             'buttonsAlign': 'right',
             'buttons'    : {
             'Ok'    : {
-            'action': new js.Callback.once(() {})
+            'action': new JsFunction.withThis(() {})
             }
             }
             });
-        js.context.jQuery.Dialog(dialog);
+        context['jQuery'].Dialog(dialog);
       }
     } else {
-      var dialog = js.map({
+      var dialog = new JsObject.fromBrowserObject({
           'title'      : 'Error..!',
           'content'    : 'Please fillout all Datafields.',
           'draggable'  : true,
           'buttonsAlign': 'right',
           'buttons'    : {
           'Ok'    : {
-          'action': new js.Callback.once(() {})
+          'action': new JsFunction.withThis(() {})
           }
           }
           });
-      js.context.jQuery.Dialog(dialog);
+      context['jQuery'].Dialog(dialog);
     }
   }
 }

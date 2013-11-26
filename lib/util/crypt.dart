@@ -31,14 +31,14 @@ class Crypt  {
   
   /** Crypts a pw with the hash **/
   String crypt(String pwHashed, String pw) {
-    var pwObject = json.parse(js.context.sjcl.encrypt(pwHashed, pw));
+    var pwObject = JSON.parse(context['sjcl'].encrypt(pwHashed, pw));
     return ['\"iv\":\"', pwObject.values.first,'\",\"salt\":\"', pwObject.values.elementAt(8), '\",\"ct\":\"', pwObject.values.last,'\"'].join();
   }
 
   /** Decrypts a pw with the hash **/
   String decrypt(String masterPwHashed , String pw) {
     var pwObject = ['{"v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"", "cipher":"aes",',pw,"}"].join();
-      return js.context.sjcl.decrypt(masterPwHashed, pwObject);
+      return context['sjcl'].decrypt(masterPwHashed, pwObject);
   }
   
   
@@ -46,13 +46,13 @@ class Crypt  {
   void openDialog(var toCall) {
     Timer.run(() {
       // trys to close the Dialog
-      bool test = js.context.jQuery.Dialog.close();
+      bool test = context['jQuery'].Dialog.close();
     
       // test if the dialog is still open
       // if closed: open dialog to get masterpw
       // else close the dialog and recall this method to open the get masterpassword dialog
       if(test != null && !test) {
-        var dialog = js.map({
+        var dialog = new JsObject.fromBrowserObject({
           'title'      : 'Enter Masterpassword',
           'content'    : 'Enter your Masterpassword:<br><br><div class="input-control text"><input autofocus="true" id="masterPw" type="password" /><button class="btn-clear"></button></div>',
           'draggable'  : true,
@@ -61,7 +61,7 @@ class Crypt  {
           'buttons'    : {
             'Cancel'    : {},
             'Ok'    : { 
-              'action': new js.Callback.many(() {
+              'action': new JsFunction.withThis(() {
                 // fetch the masterPw from inputfield
                 InputElement pwField = query('#masterPw');
                 String pwHashed = util.hash(pwField.value);
@@ -70,13 +70,13 @@ class Crypt  {
                   toCall(pwHashed);
                } else {
                   // if the masterpw is fals close the dialog and reopen it by recalling this methode
-                  js.context.jQuery.Dialog.close();
+                  context['jQuery'].Dialog.close();
                   openDialog(toCall);
                 }})
             }
           }
         });
-        js.context.jQuery.Dialog(dialog);
+        context['jQuery'].Dialog(dialog);
        } else {
         openDialog(toCall);
        }
@@ -87,38 +87,38 @@ class Crypt  {
   void setMasterPw() {
     Timer.run(() {
       // trys to close the Dialog
-      bool test = js.context.jQuery.Dialog.close();
+      bool test = context['jQuery'].Dialog.close();
     
       // test if the dialog is still open
       // if closed: open dialog to get masterpw
       // else close the dialog and recall this method to open the get masterpassword dialog
       if(test != null && !test) {
-    var dialog = js.map({
+    var dialog = new JsObject.fromBrowserObject({
       'title'      : 'Enter Masterpassword',
       'content'    : 'Enter your Masterpassword:<br><br><div class="input-control text"><input autofocus id="masterPw" type="password" /><button class="btn-clear"></button></div>Repeat your Masterpassword:<br><br><div class="input-control text"><input id="masterPw2" type="password" /><button class="btn-clear"></button></div>',
       'draggable'  : true,
       'buttonsAlign': 'right',
       'buttons'    : {
         'Ok'    : {
-          'action': new js.Callback.many(() {
-            InputElement pwField = query('#masterPw');
+          'action': new JsFunction.withThis(() {
+            InputElement pwField = querySelector('#masterPw');
             String pwHashed = util.hash(pwField.value);
             
-            InputElement pwField2 = query('#masterPw2');
+            InputElement pwField2 = querySelector('#masterPw2');
             String pwHashed2 = util.hash(pwField2.value);
             
             if(pwField.value.trim() != "" && pwHashed.compareTo(pwHashed2) == 0) {
               sendMasterPw(pwHashed);
             } else {
-              js.context.jQuery.Dialog.close();
+              context['jQuery'].Dialog.close();
               setMasterPw();
             }})
         }
         
       }
     });
-    js.context.jQuery.Dialog(dialog);
-    js.context.jQuery('#masterPw').focus();
+    context['jQuery'].Dialog(dialog);
+    context['jQuery']('#masterPw').focus();
       } else {
         setMasterPw();
        }
