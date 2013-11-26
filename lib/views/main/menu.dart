@@ -2,13 +2,11 @@ library menu;
 
 import 'package:web_ui/web_ui.dart';
 import 'dart:html';
-import 'dart:json' as json;
-import 'package:js/js.dart' as js;
+import 'dart:convert';
 import 'package:ams/controller.dart';
 import 'package:ams/views/page/add-account.dart';
 import 'package:ams/views/page/folder-overview.dart';
 import 'package:ams/views/page/show-settings.dart';
-import 'dart:async'; 
 
 import 'package:ams/util/util.dart' as util;
 
@@ -47,7 +45,7 @@ void logout() {
   }
   
   void requestCompleded(HttpRequest request) {
-    var parsedData = json.parse(request.response);
+    var parsedData = JSON.parse(request.response);
     
     new Controller()..addFolder(parsedData);
   }

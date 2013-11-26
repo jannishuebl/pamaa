@@ -2,7 +2,7 @@ library addaccount;
 
 import 'package:web_ui/web_ui.dart';
 import 'dart:html';
-import 'dart:json' as json;
+import 'dart:convert';
 import 'dart:async';
 import 'package:js/js.dart' as js;
 import 'dart:math';
@@ -46,15 +46,13 @@ static  String pageUrl = 'addAccount';
   }
 
   void togglePwMenu(e) {
-    js.scoped(() {
-        //    query('ul').id = "elToOpen";
-        //    query('i').id = "icontochange";
+        //    querySelector('ul').id = "elToOpen";
+        //    querySelector('i').id = "icontochange";
         js.context.jQuery(new js.Callback.once((jquery) {
-            jquery('#pwSettings').toggle('fast');
+            jQuery('#pwSettings').toggle('fast');
             }));
-        });
     //    js.context.jQuery(new js.Callback.once((jquery) {
-    //      jquery('#pwSettings').toggle('fast');
+    //      jQuery('#pwSettings').toggle('fast');
     //    }));
   }
 
@@ -63,16 +61,16 @@ static  String pageUrl = 'addAccount';
 
   void init() {
     // Keine Reflection bei dart2js kann somit raus
-    query('#pwSettings').style.display = 'block';
+    querySelector('#pwSettings').style.display = 'block';
 
         var generatePwRow = query ('#generatePwCellWrapper').innerHtml;
 
-        query ('#generatePwCellWrapper').innerHtml="";
+        querySelector ('#generatePwCellWrapper').innerHtml="";
         js.context.jQuery('#generatePwCellWrapper').html(generatePwRow);
 
         util.moveParkedElements();
 
-        query('#generatePw').onClick.listen(generatePw);
+        querySelector('#generatePw').onClick.listen(generatePw);
 
         var options = js.map({'initAll': true});
         js.context.jQuery()['Slider'](options);
@@ -84,12 +82,12 @@ static  String pageUrl = 'addAccount';
             "of": "#generatePwCell"
             }));
         js.context.jQuery( "#pwSettings" ).hide();
-        query('#togglePwSettings').onClick.listen(togglePwMenu);
+        querySelector('#togglePwSettings').onClick.listen(togglePwMenu);
         // macht jquery die textfelder bekannt damit der clearbutton funktioniert
         js.context.jQuery()["Input"](js.map({'initAll': true}));
         // Keine Reflection bei dart2js beim ersten klicken auf den button wird diese init() aufgerufen um das context menü auch zu öffnen wird ein klick simuliert
         // kann somit raus
-        //    query('#togglePwSettings').click();
+        //    querySelector('#togglePwSettings').click();
 
   }
 
@@ -138,7 +136,7 @@ static  String pageUrl = 'addAccount';
   }
 
   void requestCompleded(HttpRequest request) {
-    var parsedData = json.parse(request.response);
+    var parsedData = JSON.parse(request.response);
 
     var data = new Controller().addAccount(parsedData);
     new Controller()..showPage(new ShowAccountComponent()..data=data);

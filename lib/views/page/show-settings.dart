@@ -1,7 +1,6 @@
 library showsettings;
 
 import 'dart:html';
-import 'dart:json' as json;
 import 'package:js/js.dart' as js;
 import 'package:web_ui/web_ui.dart';
 import 'package:ams/controller.dart';

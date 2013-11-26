@@ -1,7 +1,7 @@
 library Controller;
 
 import 'dart:html';
-import 'dart:json' as json;
+import 'dart:convert';
 import 'dart:async'; 
 import 'package:web_ui/web_ui.dart';
 import 'package:js/js.dart' as js;
@@ -115,7 +115,7 @@ class Controller {
 
   void userLoginSuccesfull(HttpRequest response) {
     if(response.response != "") {
-      var parsedData = json.parse(response.response);
+      var parsedData = JSON.parse(response.response);
       if(parsedData != false) {
         data.user.id = parsedData;
         initData();
@@ -125,12 +125,12 @@ class Controller {
 
   void initData() {
 
-    query('.metrouicss .page').children.first.remove();
-    util.addComponent(query('.metrouicss .page'), new AppPage()..host=new DivElement());
+    querySelector('.metrouicss .page').children.first.remove();
+    util.addComponent(querySelector('.metrouicss .page'), new AppPage()..host=new DivElement());
 
     util.sendRequest('', 'GET', (response) {
 
-        var parsedData = json.parse(response.response);
+        var parsedData = JSON.parse(response.response);
         String textToCrypt = "dsgfhnjnm3l298djmfsklli0"+data.user.id+"o32dsjkfdn32irdn,cnsd";
         Crypt crypt = new Crypt();
 
@@ -212,7 +212,7 @@ class Controller {
         return true;
         }
         else return false;
-        }).query('ul');
+        }).querySelector('ul');
 
     data.account.sort((MenuAccount b, a) {
         return a.data.name.toUpperCase().compareTo(b.data.name.toUpperCase());
@@ -292,8 +292,8 @@ class Controller {
   void logout() {
     util.eraseCookie('token');
     if(pageComp != null) pageComp.reset();   
-    query('.metrouicss .page').children.first.remove();
-    util.addComponent(query('.metrouicss .page'), new StartPage()..host=new DivElement());
+    querySelector('.metrouicss .page').children.first.remove();
+    util.addComponent(querySelector('.metrouicss .page'), new StartPage()..host=new DivElement());
     data = new Data();
   }
 }

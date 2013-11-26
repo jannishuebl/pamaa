@@ -30,7 +30,7 @@ static  String pageUrl = 'showAccount';
   }
   
   void showDecryptedPw(var pwDecrypted) {
-    query('#pw').innerHtml =  pwDecrypted.toString();
+    querySelector('#pw').innerHtml =  pwDecrypted.toString();
     js.context.jQuery("#pw").focus().select();
     js.context.jQuery('#showAccountButton').hide();
   }

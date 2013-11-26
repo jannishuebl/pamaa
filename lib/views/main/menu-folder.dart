@@ -23,30 +23,26 @@ class MenuFolder extends WebComponent {
   }
     
   void open() {
-    js.scoped(() {
-      query('ul').id = "elToOpen";
-      query('i').id = "icontochange";
-      js.context.jQuery(new js.Callback.once((jquery) {
-        jquery('#elToOpen').show('fast');
-        jquery('#icontochange').removeClass('icon-folder');
-        jquery('#icontochange').addClass( "icon-folder-2" );
+      querySelector('ul').id = "elToOpen";
+      querySelector('i').id = "icontochange";
+      js.context.jquerySelector(new js.Callback.once((jquery) {
+        jquerySelector('#elToOpen').show('fast');
+        jquerySelector('#icontochange').removeClass('icon-folder');
+        jquerySelector('#icontochange').addClass( "icon-folder-2" );
       }));
-    });
-    query('i').id = "";
-    query('ul').id = "";
+    querySelector('i').id = "";
+    querySelector('ul').id = "";
   }
   
   void toggle() {
-    js.scoped(() {
-      query('ul').id = "elToOpen";
-      query('i').id = "icontochange";
-      js.context.jQuery(new js.Callback.once((jquery) {
-        jquery('#elToOpen').toggle('fast');
-        jquery('#icontochange').toggleClass( "icon-folder icon-folder-2" );
+      querySelector('ul').id = "elToOpen";
+      querySelector('i').id = "icontochange";
+      js.context.jquerySelector(new js.Callback.once((jquery) {
+        jquerySelector('#elToOpen').toggle('fast');
+        jquerySelector('#icontochange').toggleClass( "icon-folder icon-folder-2" );
       }));
-    });
-    query('i').id = "";
-    query('ul').id = "";
+    querySelector('i').id = "";
+    querySelector('ul').id = "";
   }
   
   void addAccount() {

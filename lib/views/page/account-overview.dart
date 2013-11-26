@@ -44,20 +44,20 @@ class AccountOverview extends WebPage {
     new Controller().data.account.reversed.forEach((e) {
       if(e.data.folder == folder.id)
       {
-      var ul = query('.page-region ul');
+      var ul = querySelector('.page-region ul');
       LIElement host = new LIElement();
       
       host.id = 'acc'+e.data.id.toString();
       
       host.onMouseOver.listen((e){
-        host.query('.listviewSelectButton').style.display="block";
-        host.query('.listviewSelectButtonHaken').style.display="block";
+        host.querySelector('.listviewSelectButton').style.display="block";
+        host.querySelector('.listviewSelectButtonHaken').style.display="block";
       });
       
       host.onMouseOut.listen((e){
         if(!host.classes.contains("selected")) {
-          host.query('.listviewSelectButton').style.display="none";
-          host.query('.listviewSelectButtonHaken').style.display="none";
+          host.querySelector('.listviewSelectButton').style.display="none";
+          host.querySelector('.listviewSelectButtonHaken').style.display="none";
         }
       });
       
@@ -65,8 +65,8 @@ class AccountOverview extends WebPage {
       util.addComponent(ul, accountElement);
       
       accounts.putIfAbsent(accountElement.account.data.id.toString(), () { return accountElement;});
-      accountElement.query('.listviewSelectButton').onClick.listen(clickSelect);
-      accountElement.query('.listviewSelectButtonHaken').onClick.listen(clickSelect);
+      accountElement.querySelector('.listviewSelectButton').onClick.listen(clickSelect);
+      accountElement.querySelector('.listviewSelectButtonHaken').onClick.listen(clickSelect);
       
       }
     });
@@ -144,7 +144,7 @@ class AccountOverview extends WebPage {
         'No': {},
         'Yes'    : {
           'action': new js.Callback.once(() {
-            InputElement foldernameField = query('#foldername');
+            InputElement foldernameField = querySelector('#foldername');
             String foldername = foldernameField.value;
 
                 new Controller()..renameFolder(folder..name=foldername);

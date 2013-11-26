@@ -26,7 +26,7 @@ void init() {
       host.id = 'folder'+e.data.id.toString();
       
       
-    var ul = query('.page-region ul');
+    var ul = querySelector('.page-region ul');
     
     FolderOverviewElement folderElement = new FolderOverviewElement(e)..host = host;
     util.addComponent(ul, folderElement );
