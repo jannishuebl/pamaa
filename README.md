@@ -1,4 +1,4 @@
 pamaa
 =====
 
-A webapp 
+With this webapp you can manage your accounts.
