@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <element name="account-overview-element" constructor="AccountOverviewElement" extends="li">
+      <template>
+        <p class="listviewSelectButtonHaken" account="{{account.data.id.toString()}}"></p>
+        <p class="listviewSelectButton" account="{{account.data.id.toString()}}"></p>
+        <div class="icon">
+          <i class="icon-locked fg-color-red"></i>
+        </div>
+        <div class="data">
+          <h4><div style="overflow:hidden; float: left;max-width: 140px;">{{account.data.name}}</div><i on-click="delete()" class="icon-remove" style="width: 13px; height:13px;float: left;margin-left: 10px;"></i></h4>
+        </div>
+      </template> 
+      <script type="application/dart" src="package:ams/views/page/elements/account-overview-element.dart"></script>
+    </element>
+  </body>
+</html>
+

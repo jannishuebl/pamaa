@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link rel="import" href="menu.html">
+    <link rel="import" href="header.html">  
+    <link rel="import" href="page.html">  
+    <link rel="import" href="menu-folder.html">  
+    <link rel="import" href="menu-account.html"> 
+    <link rel="import" href="start-page.html"> 
+    <link rel="import" href="app-page.html">  
+
+</head>
+<body> 
+  <element name="app-page" constructor="AppPage"
+    extends="div"> <template>
+ <div id="app" class="page secondary with-sidebar">
+       <app-header class="page-header"></app-header>
+       <menu-section class="page-sidebar" style="margin-top:50px"></menu-section>
+       <page-section id="mainPageRegion" class="page-region" style="padding: 20px; margin-top:30px"></page-section>
+      </div>
+      <div>Styled with <a href="http://metroui.org.ua">Metro UI CSS</a></div>
+  </template> <script type="application/dart"
+    src="package:ams/views/main/app-page.dart">
+       </script> </element>
+</body>
+</html>

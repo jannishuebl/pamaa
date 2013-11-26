@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+  <element name="add-account" constructor="AddAccountComponent"
+    extends="div"> <template>
+
+  <h2>Add an Account</h2>
+  <div style="margin-top: 50px" class="grid">
+    <div class="row" style="width: 550px;">
+      <div class="span2">Folder</div>
+      <div class="span3">
+        <div class="input-control select">
+          <select template iterate='folder in folders' bind-value="selectedFolder">
+            <option selected="{{selectedFolder == folder.data.id.toString()}}" value="{{folder.data.id.toString()}}">{{folder.data.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="span1">&nbsp;</div>
+    </div>
+    <div class="row" style="width: 550px;">
+      <div class="span2">Accountname</div>
+      <div class="span3">
+        <div class="input-control text">
+          <input maxlength="23" type="text" bind-value="accName" />
+          <button class="btn-clear"></button>
+        </div>
+      </div>
+      <div class="span1">&nbsp;</div>
+    </div>
+    <div class="row" style="width: 550px;">
+      <div class="span2">Username</div>
+      <div class="span3">
+        <div class="input-control text">
+          <input type="text" bind-value="accLogin" />
+          <button class="btn-clear"></button>
+        </div>
+      </div>
+      <div class="span1">&nbsp;</div>
+    </div>
+    <div id="pwRow" class="row" style="width: 550px;">
+      <div class="span2">Password</div>
+      <div class="span3">
+        <div class="input-control text">
+          <input bind-value="accPw" id="pwFieldTest" type="text" />
+          <button class="btn-clear"></button>
+        </div>
+      </div>
+      <div id= "generatePwCellWrapper" class="span1" style="width: 120px">
+      <div id="generatePwCell" class="toolbar">
+        <button id="generatePw" style="width: 80px">Generate</button>
+        <button on-click="togglePwMenu()" id="togglePwSettings">
+          <i class="icon-cog"></i>
+        </button>
+        <ul id="pwSettings" class="dropdown-menu"
+          style="position: absolute; display: none; padding: 5px;">
+          <li>
+            <div class="input-control text" id="pwLengthFieldWrapper">
+              <button class="btn-clear"></button>
+            </div>
+          </li>
+          <li><label class="input-control checkbox" id="littleWrapper">
+        <span class="helper">Lowercase</span>
+    </label></li>
+    <li><label class="input-control checkbox" id="bigWrapper">
+        
+        <span class="helper">Uppercase</span>
+    </label></li>
+    <li><label class="input-control checkbox" id="numWrapper">
+        
+        <span class="helper">Numbers</span>
+    </label></li>
+    <li><label class="input-control checkbox" id="spzWrapper">
+        
+        <span class="helper">Special character</span>
+    </label></li>
+        </ul>
+      </div>
+      </div>
+    </div>
+    <div class="row" style="width: 550px;">
+      <div class="span2"></div>
+      <div class="span3"></div>
+      <button on-click="saveAccount()" class="span1" style="width: 116px">Save</button>
+    </div>
+  </div>
+  <div id="placeholderElements" style="display: none">
+  <input type="checkbox" bind-checked="pwSpz" id="spz"><input bind-checked="pwNum" type="checkbox" id="num"><input
+    type="checkbox" bind-checked="pwBig" id="big"><input bind-value="pwLength"
+    type="text" id="pwLengthField" /><input bind-checked="pwLittle" type="checkbox" id="little">
+  </div>
+  </template>
+ <script type="application/dart" src="package:ams/views/page/add-account.dart"></script>
+  </element>
+</body>
+</html>

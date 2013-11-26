@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <element name="account-overview" constructor="AccountOverview" extends="div">
+      <template>
+        <h2>{{folder.name}}</h2>
+        <div class="button-set" data-role="button-set" style="margin-top:10px">
+          <select class="tool-button" style="width:130px; margin-right: 0px;" template iterate='folder in folders' bind-value="selectedFolder">
+            <option value="{{folder.data.id.toString()}}">{{folder.data.name}}</option>
+          </select>
+          <button on-click="move()" class="tool-button" style="width:100px"><i class="icon-move-vertical"></i> move</button>
+          <button on-click="remove()" class="tool-button" style="width:100px; margin-left: 7px"><span><i class="icon-remove"></i> remove</span></button>
+          <button on-click="rename()" class="tool-button" style="width:100px"><i class="icon-pencil"></i> rename</button>
+        </div>
+        <ul class="listview fluid" style="margin-top:20px">
+        </ul>
+      </template> 
+       <script type="application/dart" src="package:ams/views/page/account-overview.dart"></script>
+    </element>
+  </body>
+</html>

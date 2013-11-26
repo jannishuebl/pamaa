@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+  <element name="start-page" constructor="StartPage"
+    extends="header"> <template>
+         <div id="start" class="page secondary">
+        <div class="page-header">
+          <div class="page-header-content">
+            <div class="user-login">
+              <a on-click="signin()">
+                <div id="gSignInWrapper">
+                  <div id="customBtn" class="customGPlusSignIn">
+                    <span class="icon" style="padding: 5px"><img
+                      src="style/metro/images/gicon.png"></span> <span
+                      class="buttonText">Sign in</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <h1>
+              Password4u<small>for your security</small>
+            </h1>
+          </div>
+        </div>
+      
+        <div class="page-region">
+          <div class="page-region-content">
+            
+            <img src="style/metro/images/overview3.png" style="float:left">
+          </div>
+        </div>
+      </div>
+      <div>Styled with <a href="http://metroui.org.ua">Metro UI CSS</a></div>
+  </template> <script type="application/dart"
+    src="package:ams/views/main/start-page.dart">
+       </script> </element>
+</body>
+</html>

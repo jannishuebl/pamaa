@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <element name="menu-section" constructor="MenuComponent" extends="section">
+      <template>
+         <ul>
+           <li on-click="addAccount()" class="sticker sticker-color-blue" >
+            <a><i class="icon-plus"></i> Add Account</a> 
+           </li>
+           <li on-click="showOverview()" class="" >
+            <a><i class="icon-grid-view"></i> Overview</a> 
+           </li>
+         </ul>
+         <ul id="menu">
+         </ul>
+         <ul>
+           <li class="sticker sticker-color-red dropdown active" data-role="dropdown">
+            <a><i class="icon-plus"></i> Add Folder</a>
+            <ul class="sub-menu light sidebar-dropdown-menu keep-opened open">
+              <li>
+                 <div class="input-control text">
+                    <input maxlength="25" id="folderName" type="text" />
+                    <button class="btn-clear"></button>
+                 </div>  
+                 <button on-click="addFolder()">Add</button></li>
+            </ul>
+         </ul>
+      </template>
+      <script type="application/dart" src="package:ams/views/main/menu.dart"></script>
+    </element>
+  </body>
+</html>
+

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <element name="folder-overview-element" constructor="FolderOverviewElement" extends="li">
+      <template>
+        <div class="icon">
+          <i class="icon-folder fg-color-red"></i>
+        </div>
+        <div class="data" style="float:left; margin-left:20px;">
+          <h4><div style="overflow:hidden; float: left;max-width: 140px; ">{{folder.data.name}}</div><i on-click="delete()" class="icon-remove" style="width: 13px; height:13px;float: left;margin-left: 10px;"></i></h4>
+          <p style="margin-top: 10px;float: left;">{{folder.data.count}} Accounts</p>
+        </div>
+      </template> 
+      <script type="application/dart" src="package:ams/views/page/elements/folder-overview-element.dart"></script>
+    </element>
+  </body>
+</html>
+

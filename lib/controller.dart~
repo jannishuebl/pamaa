@@ -1,0 +1,233 @@
+library Controller;
+
+import 'dart:html';
+import 'dart:json'; 
+import 'package:web_ui/web_ui.dart';
+import 'dart:async'; 
+import 'package:js/js.dart' as js;
+
+import 'package:ams/util/util.dart' as util;
+import 'package:ams/views/main/page-controller.dart';
+import 'package:ams/views/main/menu-folder.dart';
+import 'package:ams/views/main/menu-account.dart';
+import 'package:ams/views/page/folder-overview.dart';
+import 'package:ams/views/page/account-overview.dart';
+import 'package:google_oauth2_client/google_oauth2_browser.dart';
+import 'package:ams/util/crypt.dart';
+import 'package:crypto/crypto.dart';
+
+part 'package:ams/model/beans.dart';
+
+/**
+ * Die Klasse Controller ist die Schnittstelle zwischen Model und Gui.
+ * 
+ * Daten die von überall erreicht werden müssen liegen hier.
+ * 
+ * Controller ist ein Singelton
+ */
+class Controller {  
+  
+  // Singleton instance 
+  static final Controller _singleton = new Controller._internal();
+  
+  // TODO -> Config 
+  String url = 'http://localhost:8080/';
+  
+  // Das Bean in dem alle Daten gespeichert sind 
+  // accounts, folder, user
+  Data data = new Data();
+  
+  var pw;
+  var toCall;
+  
+  GoogleOAuth2 auth;
+  
+  // PageComponent ist für das laden einer Contentseite zuständlich
+ 
+  PageComponent pageComp;
+  
+  factory Controller() {
+    return _singleton;
+  }
+
+  Controller._internal();
+  
+  // Eine neue Seite kann geladen werden indem der showPage methode ein neues PageObjekt übergeben wird.
+  // Dieses Ojekt muss von Webcomponent abgeleitet sein.
+  void showPage(page) {
+    pageComp..loadePage(page);
+  }
+  
+  // Die Vorhergehende Seite wird wieder geladen
+  void pageBack() {
+    pageComp..pageBack();
+  }
+  
+ 
+  
+  // wird von der Mainmethode aufgerufen und inizalisiert die Webseite
+  
+  void init() {
+    auth = new GoogleOAuth2(
+        "382698109176.apps.googleusercontent.com", // Client ID
+        ["openid", "email","https://www.googleapis.com/auth/userinfo.profile"],
+        tokenLoaded:oauthReady);
+  }
+  
+  void oauthReady(Token token) {
+    data.user = new User();
+    data.user.id = token.userId;
+    util.sendRequest(url+'api/user/login/'+token.data, 'GET', userLoginSuccesfull);
+  }
+  
+  void userLoginSuccesfull(HttpRequest response) {
+    if(response.response != "") {
+      var parsedData = parse(response.response);
+      if(parsedData) {
+        query('#start').style.display="none";
+        query('#app').style.display="block";
+        initData();
+      }
+    }
+  }
+  
+ void initData() {
+   
+   
+    util.sendRequest(url+'api/user/'+data.user.id, 'GET', (response) {
+//    var request = HttpRequest.getString('data/json.html').then((response) {
+
+      var parsedData = parse(response.response);
+      Timer.run(() {
+//          User user = new User();
+//          user.id = parsedData;
+        });
+        parsedData['folders'].forEach(addFolder);
+        parsedData['accounts'].forEach(addAccount);
+        showPage(new FolderOverview());
+        
+        // macht jquery die textfelder bekannt damit der clearbutton funktioniert
+        js.context.jQuery()["Input"](js.map({'initAll': true}));
+    });
+  }
+  
+ // fügt einen Ordner in die Sidebar ein
+  void addFolder(rawFolder) {
+    Timer.run(() {
+      var folderData = new FolderData(rawFolder['folderid'], rawFolder['foldername']);
+    UListElement menu = query('#menu');
+
+    
+      var folderLi = new MenuFolder(folderData)
+      ..host = new LIElement() 
+      ..id=folderData.id.toString()+"Folder";
+
+      data.folder.add(folderLi);
+      data.folder.sort((MenuFolder b, a) {
+        return a.data.name.toUpperCase().compareTo(b.data.name.toUpperCase());
+      });
+      
+      int preElementIndex = data.folder.indexOf(folderLi)-1;
+      if(preElementIndex < 0) util.addComponent(menu, folderLi);
+      else util.addComponent(menu, folderLi, false, data.folder.elementAt(preElementIndex));
+      
+      js.context.jQuery('#'+folderData.id.toString()+"Folder ul").sortable(js.map({
+        "connectWith": ".connectedSortable"
+      })).disableSelection();
+    });
+  }
+  
+  // füght einen Account der Sidebar hinzu
+  AccountData addAccount(rawAccount, [AccountData accdata]) {
+    var accountData;
+    if(rawAccount != null) accountData = new AccountData(rawAccount['accountid'], 
+        rawAccount['accountname'], rawAccount['login'], rawAccount['password'], rawAccount['folder']);
+    if(accdata != null) accountData = accdata;
+    Timer.run(() {
+   
+      var accountLi = new MenuAccount()
+      ..host = new LIElement()
+      ..data=accountData ..id=accountData.id.toString()+"Account";
+
+      data.account.add(accountLi);
+      
+      var folderUl = data.folder.firstWhere((E) {
+        if(E.data.id == accountData.folder){
+          E.data.count++;
+          return true;
+        }
+        else return false;
+      }).query('ul');
+      
+      data.account.sort((MenuAccount b, a) {
+        return a.data.name.toUpperCase().compareTo(b.data.name.toUpperCase());
+      });
+      
+      List<MenuAccount> accountsForFolder = new List();
+      
+      data.account.forEach((E) {
+        if(E.data.folder == accountData.folder) accountsForFolder.add(E);
+      });
+      
+      int preElementIndex = accountsForFolder.indexOf(accountLi)-1;
+
+      if(preElementIndex < 0) util.addComponent(folderUl, accountLi);
+      else util.addComponent(folderUl, accountLi, false, accountsForFolder.elementAt(preElementIndex));
+      
+      
+//      js.context.jQuery('#'+accountData.id.toString()+"Account").draggable();
+      
+    });
+    return accountData;
+  }
+  
+  void removeFolder(MenuFolder folder) {
+  // TODO: remove Folder from server
+    folder.remove();
+    data.folder.remove(folder);
+  }
+  
+  void removeAccount(MenuAccount account, var folder) {
+    util.sendRequest(url+'api/user/'+data.user.id+'/account/'+account.data.id.toString(), 'DELETE', (_) {
+      account.remove();
+      data.account.remove(account);
+      folder.count--;
+      showPage(new AccountOverview(folder.id));
+    });
+  }
+  
+  moveAccount(MenuAccount account, String selectedFolder, var folder) {
+    util.sendJson(new Controller().url+'api/user/'+ new Controller().data.user.id + '/account', 
+        'PUT', '{"folder":'+selectedFolder+',"accountname":"'+account.data.name+'","accountid":'+account.data.id.toString()+',"login":"'+account.data.login+'",'
+        +'"password":"'+account.data.pw+'","note":""}', (HttpRequest request){
+      folder.count--;
+      AccountData accdata = account.data..folder = int.parse(selectedFolder);
+      account.remove();
+      data.account.remove(account);
+      
+      addAccount(null, accdata);
+      
+      showPage(new AccountOverview(account.data.folder));
+      
+    });
+  }
+  
+  renameFolder(FolderData folderdata) {
+    
+    data.folder.firstWhere((e) {return e.data.id == folderdata.id;}).data.name = folderdata.name;
+    util.sendJson(new Controller().url+'api/user/'+ new Controller().data.user.id + '/folder', 
+        'PUT', '{"folderid":'+folderdata.id.toString()+',"foldername":"'+folderdata.name+'"}', (_) {});
+  }
+  
+  renameAccount(AccountData accountData) {
+    var account = data.account.firstWhere((e) {return e.data.id == accountData.id;})..data.name = accountData.name;
+    util.sendJson(new Controller().url+'api/user/'+ new Controller().data.user.id + '/account', 
+        'PUT', '{"folder":'+account.data.folder.toString()+',"accountname":"'+account.data.name+'","accountid":'+account.data.id.toString()+',"login":"'+account.data.login+'",'
+        +'"password":"'+account.data.pw+'","note":""}', (_){});
+  }
+}
+
+
+
+
+

@@ -1,0 +1,8 @@
+name: ams
+description: A sample WebUI application
+dependencies:
+  browser: any
+  crypto: any
+  google_oauth2_client: any
+  js: any
+  web_ui: any

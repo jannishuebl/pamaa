@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+  <element name="show-s" constructor="ShowSettingsComponent"
+    extends="div"> <template>
+
+  <h2>Settings</h2>
+   <fieldset>
+    <legend>Change Masterpassword</legend>
+      <div style="margin-top: 50px" class="grid">
+        <div class="row" style="width: 550px;">
+          <div class="span2">Enter Masterpassword:</div>
+          <div class="span3">
+            <div class="input-control text">
+              <input maxlength="23" type="password" bind-value="oldMPw" />
+              <button class="btn-clear"></button>
+            </div>
+          </div>
+          <div class="span1">&nbsp;</div>
+        </div>
+        <div class="row" style="width: 550px;">
+          <div class="span2">Enter new Masterpassword:</div>
+          <div class="span3">
+            <div class="input-control text">
+              <input type="password" bind-value="newMPw" />
+              <button class="btn-clear"></button>
+            </div>
+          </div>
+          <div class="span1">&nbsp;</div>
+        </div>
+        <div id="pwRow" class="row" style="width: 550px;">
+          <div class="span2">Repeat new Masterpassword:</div>
+          <div class="span3">
+            <div class="input-control text">
+              <input bind-value="newMPw2" id="pwFieldTest" type="password" />
+              <button class="btn-clear"></button>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="width: 550px;">
+          <div class="span2"></div>
+          <div class="span3"></div>
+          <button on-click="savePw()" class="span1" style="width: 116px">Save</button>
+        </div>
+      </div>
+    </fieldset>
+  </template>
+ <script type="application/dart" src="package:ams/views/page/show-settings.dart"></script>
+  </element>
+</body>
+</html>

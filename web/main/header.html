@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+  <element name="app-header" constructor="HeaderComponent"
+    extends="header"> <template>
+  <div class="page-header-content">
+    <div class="user-login">
+      <a href="#">
+        <div class="name">
+          <span class="first-name">{{controller.data.user.givenName}}</span> <span class="last-name">{{controller.data.user.familyName}}</span>
+        </div>  
+        <div class="avatar">
+           <template instantiate="if controller.data.user.pictureLink.isEmpty">
+          <i style="margin: 5px 4px" class="icon-user-3 fg-color-black"></i>
+            </template>
+           <template instantiate="if controller.data.user.pictureLink.isNotEmpty">
+          <img src="{{controller.data.user.pictureLink}}">
+          </template>
+        </div>
+      </a>
+    </div>
+    <h1 class="fg-color-blue">
+      <span>Password4u</span>
+    </h1>
+    <a on-click="open()" class="back-button big page-back" style="margin-top:18px"></a>
+  </div>
+  </template> <script type="application/dart"
+    src="package:ams/views/main/header.dart">
+       </script> </element>
+</body>
+</html>
